@@ -159,15 +159,18 @@
     </div>
 </body>
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-const token = urlParams.get('token');
+        // Retrieve the token from localStorage or query parameters
+const urlParams = new URLSearchParams(window.location.search);
+const token = urlParams.get('token') || localStorage.getItem('google_token');
 
 if (token) {
-    console.log("Received token:", token);
-    // Use this token for API calls or display user info
+    console.log("User token:", token);
+    // Proceed with logged-in user actions
 } else {
-    console.error("No token found in query parameters.");
+    // Redirect back to login if no token is found
+    window.location.href = "index.html";
 }
+
 
     </script>
 </html>
