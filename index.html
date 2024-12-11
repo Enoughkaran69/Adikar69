@@ -121,10 +121,17 @@
     </div>
 </body>
 <script>
-    function handleCredentialResponse(response) {
-      console.log("Encoded JWT ID token: " + response.credential);
-      // Send the token to your server for verification or further processing
+function handleCredentialResponse(response) {
+    if (response.credential) {
+        console.log("Encoded JWT ID token: " + response.credential);
+        
+        // Example: Redirect to the desired page with the token
+        window.location.href = `patner.html?token=${response.credential}`;
+    } else {
+        console.error("Sign-In failed. No credential received.");
     }
+}
+
   
     window.onload = function() {
       google.accounts.id.initialize({
