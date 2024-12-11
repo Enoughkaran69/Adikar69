@@ -158,4 +158,16 @@
         <a href="home.html" class="login-button">Add Your Partner</a>
     </div>
 </body>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+const token = urlParams.get('token');
+
+if (token) {
+    console.log("Received token:", token);
+    // Use this token for API calls or display user info
+} else {
+    console.error("No token found in query parameters.");
+}
+
+    </script>
 </html>
