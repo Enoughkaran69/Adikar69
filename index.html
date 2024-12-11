@@ -122,15 +122,27 @@
 </body>
 <script>
 function handleCredentialResponse(response) {
-    if (response.credential) {
-        console.log("Encoded JWT ID token: " + response.credential);
-        
-        // Example: Redirect to the desired page with the token
-        window.location.href = `patner.html?token=${response.credential}`;
-    } else {
-        console.error("Sign-In failed. No credential received.");
+        if (response.credential) {
+            console.log("Encoded JWT ID token: " + response.credential);
+
+            // Save token in localStorage (or sessionStorage/cookies)
+            localStorage.setItem('google_token', response.credential);
+
+            // Redirect to the partner page
+            window.location.href = `patner.html?token=${response.credential}`;
+        } else {
+            console.error("Sign-In failed. No credential received.");
+        }
     }
-}
+
+    function checkLoginStatus() {
+        // Check if the user is already logged in
+        const token = localStorage.getItem('google_token');
+        if (token) {
+            // User is already logged in, redirect them
+            window.location.href = `patner.html?token=${token}`;
+        }
+    }
 
   
     window.onload = function() {
@@ -142,6 +154,9 @@ function handleCredentialResponse(response) {
         document.querySelector(".g_id_signin"), // Specify the container
         { theme: "outline", size: "large" }    // Customize button style
       );
+                // Check login status on page load
+        checkLoginStatus();
+
       google.accounts.id.prompt(); // Optional: Show the One Tap prompt
     };
   </script>
