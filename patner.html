@@ -147,6 +147,10 @@
     </style>
 </head>
 <body>
+        <h1>Welcome, <span id="user-name"></span>!</h1>
+    <img id="user-picture" alt="Profile Picture" style="border-radius: 50%;">
+    <p>Email: <span id="user-email"></span></p>
+    <p>ID: <span id="user-id"></span></p>
     <div class="container">
         <div class="floating-hearts"></div>
         <!-- Image added here, now smaller size -->
@@ -159,18 +163,35 @@
     </div>
 </body>
     <script>
+        function parseJwt(token) {
+            const base64Url = token.split('.')[1]; // Get the payload
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
+        }
+
         // Retrieve the token from localStorage or query parameters
 const urlParams = new URLSearchParams(window.location.search);
 const token = urlParams.get('token') || localStorage.getItem('google_token');
 
-if (token) {
-    console.log("User token:", token);
-    // Proceed with logged-in user actions
-} else {
-    // Redirect back to login if no token is found
-    window.location.href = "index.html";
-}
+        if (token) {
+            // Decode the token
+            const userInfo = parseJwt(token);
 
+            // Populate user information
+            document.getElementById('user-name').textContent = userInfo.name || "User";
+            document.getElementById('user-email').textContent = userInfo.email || "N/A";
+            document.getElementById('user-id').textContent = userInfo.sub || "N/A";
+
+            if (userInfo.picture) {
+                document.getElementById('user-picture').src = userInfo.picture;
+            }
+        } else {
+            // Redirect back to login if no token is found
+            alert("No token found! Redirecting to login.");
+           
 
     </script>
 </html>
